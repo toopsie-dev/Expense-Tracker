@@ -26,7 +26,7 @@ const Login: React.FC = () => {
 
     const onSubmit = async (data: LoginFormData) => {
         try {
-            const response = await api.post("/api/login", data);
+            const response = await api.post("login", data);
 
             if (response.data.success) {
                 localStorage.setItem("token", response.data.token);
@@ -37,10 +37,38 @@ const Login: React.FC = () => {
                 navigate("/dashboard");
             }
         } catch (error: any) {
-            setError("root", {
-                type: "manual",
-                message: error.response?.data?.message || "Invalid credentials",
-            });
+            console.error("Login error:", error);
+
+            if (error.response) {
+                const status = error.response.status;
+                const message =
+                    error.response?.data?.message || "Invalid credentials";
+
+                if (status === 403) {
+                    console.error(
+                        "CSRF token issue. Check network tab for details."
+                    );
+                    setError("root", {
+                        type: "manual",
+                        message: "Authentication error: CSRF token mismatch.",
+                    });
+                } else if (status === 401) {
+                    setError("root", {
+                        type: "manual",
+                        message: message,
+                    });
+                } else {
+                    setError("root", {
+                        type: "manual",
+                        message: `Error: ${message}`,
+                    });
+                }
+            } else {
+                setError("root", {
+                    type: "manual",
+                    message: "Network error. Please try again later.",
+                });
+            }
         }
     };
 
