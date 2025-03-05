@@ -39,7 +39,7 @@ const Signup: React.FC = () => {
 
     const onSubmit = async (data: SignupFormData) => {
         try {
-            const response = await api.post("/register", data);
+            const response = await api.post("register", data);
             if (response.data.token) {
                 localStorage.setItem("token", response.data.token);
                 navigate("/");
