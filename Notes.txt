@@ -1,0 +1,9 @@
+## Fetch the latest updates from GitHub
+▶️ git fetch --all
+▶️ git reset --hard origin/main
+▶️ git clean -df
+
+## Remove all data from your Laravel project's database
+▶️ php artisan migrate:refresh
+▶️ php artisan db:wipe
+
